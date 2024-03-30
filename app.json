@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "HymnalApp",
+    "slug": "HymnalApp",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "HymnalApp"
+}
