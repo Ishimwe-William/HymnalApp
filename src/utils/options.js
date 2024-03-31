@@ -5,7 +5,7 @@ import {DrawerActions, useNavigation} from "@react-navigation/native";
 export const navOptions = () => {
     const navigation = useNavigation();
     return {
-        headerTintColor: 'darkblue',
+        headerTintColor: 'black',
         headerStyle: {
             backgroundColor: 'lightgray'
         },
