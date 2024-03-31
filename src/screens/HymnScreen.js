@@ -1,14 +1,20 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, {useState, useLayoutEffect, useContext} from 'react';
 import { Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { DummyHymns } from '../dummy/Dummy';
+import {lightModeStyles,darkModeStyles} from './PreferencesScreen'
+import {ThemeContext} from "../utils/ThemeContext";
 
 export const HymnScreen = () => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [filteredHymns, setFilteredHymns] = useState(DummyHymns);
+
+    // Conditionally apply styles based on the theme
+    const { isDarkMode } = useContext(ThemeContext);
+    const styles = isDarkMode ? darkModeStyles : lightModeStyles;
 
     const handleSearch = () => {
         const query = searchQuery.toLowerCase();
@@ -52,7 +58,7 @@ export const HymnScreen = () => {
             ),
             headerLeft: () => (
                 <TouchableOpacity onPress={isSearchActive ? toggleSearch : () => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Icon name={isSearchActive ? 'arrow-back' : 'menu'} size={25} color={'black'} style={{ paddingLeft: 20 }} />
+                    <Icon name={isSearchActive ? 'arrow-back' : 'menu'} size={25} color={'black'} style={{ paddingLeft: 15 }} />
                 </TouchableOpacity>
             ),
             headerRight: () => (
@@ -68,7 +74,7 @@ export const HymnScreen = () => {
     }, [navigation, isSearchActive]);
 
     return (
-        <View>
+        <View style={styles.container}>
             {isSearchActive && (
                 <TextInput
                     placeholder="Search"
@@ -87,7 +93,7 @@ export const HymnScreen = () => {
                     <TouchableOpacity
                         onPress={() => navigation.navigate('HymnDetailScreen', { hymn: item })}
                         style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-                        <Text style={{ fontSize: 18 }}>{item.hymnNumber}. {item.title}</Text>
+                        <Text style={[styles.text,{ fontSize: 18 }]}>{item.hymnNumber}. {item.title}</Text>
                     </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.id.toString()}
@@ -95,3 +101,4 @@ export const HymnScreen = () => {
         </View>
     );
 };
+

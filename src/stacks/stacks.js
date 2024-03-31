@@ -1,27 +1,25 @@
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {SettingsScreen} from "../screens/SettingsScreen";
-import {HymnScreen} from "../screens/HymnScreen";
-import {navOptions} from "../utils/options";
-import {useNavigation} from "@react-navigation/native";
+import { HymnScreen } from "../screens/HymnScreen";
+import { NavOptions } from "../utils/options";
+import { PreferencesScreen } from "../screens/PreferencesScreen";
+import { HymnDetailScreen } from "../screens/HymnDetailScreen";
 
-const Stack=createStackNavigator();
+const Stack = createStackNavigator();
 
-export const MyStack=()=> {
-    const navigation = useNavigation();
+export const MyStack = () => {
     return (
-        <Stack.Navigator screenOptions={()=>navOptions(navigation)}>
-            <Stack.Screen name="HymnStack" component={HymnScreen}/>
-            {/*<Stack.Screen name="SettingsStack" component={SettingsScreen} />*/}
+        <Stack.Navigator screenOptions={NavOptions}>
+            <Stack.Screen name="HymnScreen" component={HymnScreen} />
+            <Stack.Screen name="HymnDetailScreen" component={HymnDetailScreen} />
         </Stack.Navigator>
     );
 }
 
-export const MySettingsStack=()=> {
-    const navigation = useNavigation();
+export const MyPreferencesStack = () => {
     return (
-        <Stack.Navigator screenOptions={()=>navOptions(navigation)}>
-            {/*<Stack.Screen name="HymnStack" component={HymnScreen}/>*/}
-            <Stack.Screen name="SettingsStack" component={SettingsScreen} />
+        <Stack.Navigator screenOptions={NavOptions}>
+            <Stack.Screen name="PreferencesScreen" component={PreferencesScreen} />
         </Stack.Navigator>
     );
 }

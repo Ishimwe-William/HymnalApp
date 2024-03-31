@@ -1,15 +1,17 @@
+import React from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
-import {MyDrawer} from "./src/drawer/drawer";
+import {MyDrawer} from './src/drawer/drawer';
+import {ThemeProvider} from "./src/utils/ThemeContext";
 
 export default function App() {
+
     return (
-        <NavigationContainer>
-            <MyDrawer/>
-            <StatusBar
-                backgroundColor={'black'} style={'light'}/>
-        </NavigationContainer>
+        <ThemeProvider>
+            <NavigationContainer>
+                <MyDrawer />
+                <StatusBar backgroundColor={'black'} style={'light'} />
+            </NavigationContainer>
+        </ThemeProvider>
     );
 }
-
