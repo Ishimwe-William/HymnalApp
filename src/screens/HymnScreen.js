@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { DummyHymns } from '../dummy/Dummy';
 
@@ -51,7 +51,7 @@ export const HymnScreen = () => {
                 </Text>
             ),
             headerLeft: () => (
-                <TouchableOpacity onPress={toggleSearch}>
+                <TouchableOpacity onPress={isSearchActive ? toggleSearch : () => navigation.dispatch(DrawerActions.toggleDrawer())}>
                     <Icon name={isSearchActive ? 'arrow-back' : 'menu'} size={25} color={'black'} style={{ paddingLeft: 20 }} />
                 </TouchableOpacity>
             ),
