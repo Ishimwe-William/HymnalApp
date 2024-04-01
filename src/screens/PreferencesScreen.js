@@ -38,7 +38,7 @@ export const PreferencesScreen = () => {
                 </View>
             ),
         });
-    }, [navigation]);
+    }, []);
 
     const handleToggleTheme = () => {
         // Toggle the theme
