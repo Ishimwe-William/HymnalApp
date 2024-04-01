@@ -1,62 +1,60 @@
-import React, {useContext, useLayoutEffect} from 'react';
-import {Text, View, Switch, StyleSheet} from 'react-native';
-import {DrawerActions, useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {ThemeContext} from '../utils/ThemeContext';
+import React, { useContext, useLayoutEffect } from 'react';
+import { Text, View, Switch, StyleSheet } from 'react-native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../utils/ThemeContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { darkModeStyles, lightModeStyles } from "../utils/options";
 
 export const PreferencesScreen = () => {
     const navigation = useNavigation();
-    const {isDarkMode, toggleTheme} = useContext(ThemeContext);
+    const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 
     const styles = isDarkMode ? darkModeStyles : lightModeStyles;
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: 'Preferences',
+            headerStyle: {
+                ...styles.headerContainer,
+            },
+            headerTitle: () => (
+                <Text style={[styles.headerText, { fontSize: 20 }]}>
+                    Preferences
+                </Text>
+            ),
             headerLeft: () => (
                 <Icon
-                    name={'menu'}
-                    size={25}
-                    color={'black'}
-                    style={{paddingLeft: 20}}
+                    name={'bars'}
+                    size={20}
+                    color={styles.headerIcon.color}
+                    style={{ paddingLeft: 15 }}
                     onPress={() => {
                         navigation.dispatch(DrawerActions.toggleDrawer());
                     }}
                 />
             ),
             headerRight: () => (
-                <View style={{paddingRight: 20}}>
+                <View style={{ paddingRight: 20 }}>
                     {/* You can include any component or icon here */}
                 </View>
             ),
         });
-    }, [navigation]); // Include navigation in the dependency array
+    }, [navigation]);
+
+    const handleToggleTheme = () => {
+        // Toggle the theme
+        toggleTheme();
+        // Reload the entire app to apply the new theme
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'HymnScreen' }], // Replace 'Root' with the name of your root navigator
+        });
+    };
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Preferences</Text>
             <Text style={styles.text}>Dark Mode</Text>
-            <Switch value={isDarkMode} onValueChange={toggleTheme}/>
+            <Switch value={isDarkMode} onValueChange={handleToggleTheme} />
         </View>
     );
 };
-
-export const lightModeStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white', // Light mode background color
-    },
-    text: {
-        color: '#000',
-    },
-});
-
-export const darkModeStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#121212', // Dark mode background color
-    },
-    text: {
-        color: '#fff',
-    },
-});

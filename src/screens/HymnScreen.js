@@ -1,10 +1,10 @@
 import React, {useState, useLayoutEffect, useContext} from 'react';
-import { Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import {Text, View, FlatList, TouchableOpacity, TextInput} from 'react-native';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { DummyHymns } from '../dummy/Dummy';
-import {lightModeStyles,darkModeStyles} from './PreferencesScreen'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {DummyHymns} from '../dummy/Dummy';
 import {ThemeContext} from "../utils/ThemeContext";
+import {darkModeStyles, lightModeStyles} from "../utils/options";
 
 export const HymnScreen = () => {
     const navigation = useNavigation();
@@ -13,7 +13,7 @@ export const HymnScreen = () => {
     const [filteredHymns, setFilteredHymns] = useState(DummyHymns);
 
     // Conditionally apply styles based on the theme
-    const { isDarkMode } = useContext(ThemeContext);
+    const {isDarkMode} = useContext(ThemeContext);
     const styles = isDarkMode ? darkModeStyles : lightModeStyles;
 
     const handleSearch = () => {
@@ -21,6 +21,10 @@ export const HymnScreen = () => {
         const filtered = DummyHymns.filter((hymn) => {
             // Check if the hymn title matches the query
             if (hymn.title.toLowerCase().includes(query)) {
+                return true;
+            }
+            // Check if the hymn number matches the query
+            if (hymn.hymnNumber.includes(query)) {
                 return true;
             }
             // Check if any stanza text matches the query
@@ -51,21 +55,26 @@ export const HymnScreen = () => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle:()=>(
-                <Text style={{fontSize:20}}>
-                    {isSearchActive ? '' : 'Indirimbo'}
+            headerStyle: {
+                ...styles.headerContainer,
+            },
+            headerTitle: () => (
+                <Text style={[styles.headerText, {fontSize: 20}]}>
+                    {isSearchActive ? 'Ishakiro' : 'Indirimbo'}
                 </Text>
             ),
             headerLeft: () => (
-                <TouchableOpacity onPress={isSearchActive ? toggleSearch : () => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Icon name={isSearchActive ? 'arrow-back' : 'menu'} size={25} color={'black'} style={{ paddingLeft: 15 }} />
+                <TouchableOpacity
+                    onPress={isSearchActive ? toggleSearch : () => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                    <Icon name={isSearchActive ? 'arrow-left' : 'bars'} size={20} color={styles.headerIcon.color}
+                          style={{paddingLeft: 15}}/>
                 </TouchableOpacity>
             ),
             headerRight: () => (
                 <View>
                     {!isSearchActive && (
                         <TouchableOpacity onPress={toggleSearch}>
-                            <Icon name={'search'} size={25} color={'black'} style={{ paddingRight: 20 }} />
+                            <Icon name={'search'} size={20} color={styles.headerIcon.color} style={{paddingRight: 20}}/>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -84,16 +93,22 @@ export const HymnScreen = () => {
                         handleSearch();
                     }}
                     autoFocus={true}
-                    style={{ paddingHorizontal: 10, height: 40, borderWidth: 1, borderRadius: 5, margin: 10 }}
+                    style={[styles.textInput, {
+                        paddingHorizontal: 10,
+                        height: 40,
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        margin: 10
+                    }]}
                 />
             )}
             <FlatList
                 data={filteredHymns}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('HymnDetailScreen', { hymn: item })}
-                        style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-                        <Text style={[styles.text,{ fontSize: 18 }]}>{item.hymnNumber}. {item.title}</Text>
+                        onPress={() => navigation.navigate('HymnDetailScreen', {hymn: item})}
+                        style={[styles.list,{padding: 20, borderBottomWidth: 1}]}>
+                        <Text style={[styles.text, {fontSize: 18}]}>{item.hymnNumber}. {item.title}</Text>
                     </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.id.toString()}
