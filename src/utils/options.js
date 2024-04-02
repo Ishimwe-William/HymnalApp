@@ -41,6 +41,22 @@ export const darkModeStyles = StyleSheet.create({
     drawerContainer: {
         backgroundColor: '#204855',
     },
+    preferenceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#204855',
+        padding: 20,
+        borderRadius: 10,
+        borderColor:'#000'
+    },
     text: {
         color: '#fff',
     },
@@ -78,6 +94,21 @@ export const lightModeStyles = StyleSheet.create({
     },
     drawerContainer: {
         backgroundColor: '#3E8188',
+    },
+    preferenceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
     },
     text: {
         color: '#000',

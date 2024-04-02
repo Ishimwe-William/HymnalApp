@@ -1,8 +1,8 @@
 import React, { useContext, useLayoutEffect } from 'react';
-import { Text, View, Switch, StyleSheet } from 'react-native';
+import { Text, View, Switch, StyleSheet, TouchableOpacity } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../utils/ThemeContext';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 import { darkModeStyles, lightModeStyles } from "../utils/options";
 
 export const PreferencesScreen = () => {
@@ -22,23 +22,23 @@ export const PreferencesScreen = () => {
                 </Text>
             ),
             headerLeft: () => (
-                <Icon
-                    name={'bars'}
-                    size={20}
-                    color={styles.headerIcon.color}
-                    style={{ paddingLeft: 15 }}
+                <TouchableOpacity
                     onPress={() => {
                         navigation.dispatch(DrawerActions.toggleDrawer());
                     }}
-                />
+                    style={{ marginLeft: 15 }}
+                >
+                    <Icon name={'bars'} size={20} color={styles.headerIcon.color} />
+                </TouchableOpacity>
             ),
             headerRight: () => (
-                <View style={{ paddingRight: 20 }}>
-                    {/* You can include any component or icon here */}
+                <View style={{ flexDirection: 'row', marginRight: 15 }}>
+                    <Icon name={isDarkMode ? 'moon-o' : 'sun-o'} size={20} color={styles.headerIcon.color} style={{ marginRight: 10 }} />
+                    {/* You can include additional icons or components here */}
                 </View>
             ),
         });
-    }, []);
+    }, [navigation, isDarkMode]);
 
     const handleToggleTheme = () => {
         // Toggle the theme
@@ -46,15 +46,17 @@ export const PreferencesScreen = () => {
         // Reload the entire app to apply the new theme
         navigation.reset({
             index: 0,
-            routes: [{ name: 'HymnScreen' }], // Replace 'Root' with the name of your root navigator
+            routes: [{ name: 'HymnScreen' }], // Replace 'HymnScreen' with the name of your root navigator
         });
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Preferences</Text>
-            <Text style={styles.text}>Dark Mode</Text>
-            <Switch value={isDarkMode} onValueChange={handleToggleTheme} />
+            <View style={styles.preferenceContainer}>
+                <Text style={styles.text}>Dark Mode</Text>
+                <Switch value={isDarkMode} onValueChange={handleToggleTheme} />
+            </View>
         </View>
     );
 };
