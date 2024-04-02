@@ -46,16 +46,18 @@ export const PreferencesScreen = () => {
         // Reload the entire app to apply the new theme
         navigation.reset({
             index: 0,
-            routes: [{ name: 'HymnScreen' }], // Replace 'HymnScreen' with the name of your root navigator
+            routes: [{ name: 'HymnScreen' }],
         });
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Preferences</Text>
+            <Text style={[styles.text, styles.title]}>Preferences</Text>
             <View style={styles.preferenceContainer}>
-                <Text style={styles.text}>Dark Mode</Text>
-                <Switch value={isDarkMode} onValueChange={handleToggleTheme} />
+                <View style={styles.preferenceItem}>
+                    <Text style={[styles.text, styles.preferenceLabel]}>Dark Mode</Text>
+                    <Switch value={isDarkMode} onValueChange={handleToggleTheme} />
+                </View>
             </View>
         </View>
     );

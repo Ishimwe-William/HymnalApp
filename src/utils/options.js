@@ -41,10 +41,7 @@ export const darkModeStyles = StyleSheet.create({
     drawerContainer: {
         backgroundColor: '#204855',
     },
-    preferenceContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
+
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -83,6 +80,20 @@ export const darkModeStyles = StyleSheet.create({
     list: {
         borderBottomColor: '#000',
     },
+    preferenceContainer: {
+        marginTop: 20,
+    },
+    preferenceItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        padding:10,
+    },
+    preferenceLabel: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });
 
 export const lightModeStyles = StyleSheet.create({
@@ -95,10 +106,7 @@ export const lightModeStyles = StyleSheet.create({
     drawerContainer: {
         backgroundColor: '#3E8188',
     },
-    preferenceContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
+
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -134,6 +142,20 @@ export const lightModeStyles = StyleSheet.create({
     },
     list: {
         borderBottomColor: '#3E8188',
+    },
+    preferenceContainer: {
+        marginTop: 20,
+    },
+    preferenceItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        padding:10,
+    },
+    preferenceLabel: {
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 
