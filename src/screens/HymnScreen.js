@@ -1,41 +1,57 @@
-import React, {useState, useLayoutEffect, useContext} from 'react';
+import React, {useState, useLayoutEffect, useContext, useEffect, useCallback} from 'react';
 import {Text, View, FlatList, TouchableOpacity, TextInput} from 'react-native';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {DummyHymns} from '../dummy/Dummy';
 import {ThemeContext} from "../utils/ThemeContext";
 import {darkModeStyles, lightModeStyles} from "../utils/options";
+import {getHymns, initDatabase, preloadHymns} from "../database/database";
+
+initDatabase();
 
 export const HymnScreen = () => {
+    const [hymns, setHymns] = useState([]);
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
-    const [filteredHymns, setFilteredHymns] = useState(DummyHymns);
-
-    // Conditionally apply styles based on the theme
+    const [filteredHymns, setFilteredHymns] = useState([]);
     const {isDarkMode} = useContext(ThemeContext);
     const styles = isDarkMode ? darkModeStyles : lightModeStyles;
 
+    const loadHymns = useCallback(async () => {
+        try {
+            const hymnData = await preloadHymns();
+            setHymns(hymnData);
+            setFilteredHymns(hymnData);
+        } catch (error) {
+            console.error('Error loading hymns:', error);
+        }
+    }, []);
+
+    useEffect(() => {
+        loadHymns();
+    }, [loadHymns]);
+
+
     const handleSearch = () => {
         const query = searchQuery.toLowerCase();
-        const filtered = DummyHymns.filter((hymn) => {
-            // Check if the hymn title matches the query
-            if (hymn.title.toLowerCase().includes(query)) {
+        const filtered = hymns.filter((hymn) => {
+
+            if (hymn?.title?.toLowerCase().includes(query)) {
                 return true;
             }
-            // Check if the hymn number matches the query
-            if (hymn.hymnNumber.includes(query)) {
+
+            if (hymn?.number?.toString().trim().includes(query)) {
                 return true;
             }
-            // Check if any stanza text matches the query
-            for (const stanza of hymn.stanzas) {
-                if (stanza.text.toLowerCase().includes(query)) {
+
+            for (const stanza of hymn?.stanzas ?? []) {
+                if (stanza?.text?.toLowerCase().includes(query)) {
                     return true;
                 }
             }
-            // Check if any refrain text matches the query
-            for (const refrain of hymn.refrains) {
-                if (refrain.text.toLowerCase().includes(query)) {
+
+            for (const refrain of hymn?.refrains ?? []) {
+                if (refrain?.text?.toLowerCase().includes(query)) {
                     return true;
                 }
             }
@@ -48,12 +64,25 @@ export const HymnScreen = () => {
     const toggleSearch = () => {
         if (isSearchActive) {
             setSearchQuery('');
-            setFilteredHymns(DummyHymns);
+            setFilteredHymns(hymns);
         }
         setIsSearchActive(!isSearchActive);
     };
 
     useLayoutEffect(() => {
+
+        const loadHymns = async () => {
+            try {
+                const hymnData = await getHymns();
+                setHymns(hymnData);
+                setFilteredHymns(hymnData);
+            } catch (error) {
+                console.error('Error loading hymns:', error);
+            }
+        };
+
+        loadHymns
+
         navigation.setOptions({
             headerStyle: {
                 ...styles.headerContainer,
@@ -107,11 +136,13 @@ export const HymnScreen = () => {
                 renderItem={({item}) => (
                     <TouchableOpacity
                         onPress={() => navigation.navigate('HymnDetailScreen', {hymn: item})}
-                        style={[styles.list,{padding: 20, borderBottomWidth: 1}]}>
-                        <Text style={[styles.text, {fontSize: 18}]}>{item.hymnNumber}. {item.title}</Text>
+                        style={[styles.list, {padding: 20, borderBottomWidth: 1}]}>
+                        <Text style={[styles.text, {fontSize: 18}]}>
+                            {item?.number?.toString()}. {item?.title}
+                        </Text>
                     </TouchableOpacity>
                 )}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item?.id?.toString()}
             />
         </View>
     );
