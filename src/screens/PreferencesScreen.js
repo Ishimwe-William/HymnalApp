@@ -33,17 +33,14 @@ export const PreferencesScreen = () => {
             ),
             headerRight: () => (
                 <View style={{ flexDirection: 'row', marginRight: 15 }}>
-                    <Icon name={isDarkMode ? 'moon-o' : 'sun-o'} size={20} color={styles.headerIcon.color} style={{ marginRight: 10 }} />
-                    {/* You can include additional icons or components here */}
+                    <Icon onPress={toggleTheme} name={isDarkMode ? 'moon-o' : 'sun-o'} size={20} color={styles.headerIcon.color} style={{ marginRight: 10 }} />
                 </View>
             ),
         });
     }, [navigation, isDarkMode]);
 
     const handleToggleTheme = () => {
-        // Toggle the theme
         toggleTheme();
-        // Reload the entire app to apply the new theme
         navigation.reset({
             index: 0,
             routes: [{ name: 'HymnScreen' }],

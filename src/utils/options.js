@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
-import { useNavigation } from "@react-navigation/native";
-import { StyleSheet } from 'react-native';
-import { ThemeContext } from "./ThemeContext";
+import React, {useContext} from 'react';
+import {useNavigation} from "@react-navigation/native";
+import {StyleSheet} from 'react-native';
+import {ThemeContext} from "./ThemeContext";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {DrawerContentScrollView, DrawerItemList} from "@react-navigation/drawer";
-import {Image, View} from "react-native";
 
 export const NavOptions = () => {
     const navigation = useNavigation();
 
-    const { isDarkMode } = useContext(ThemeContext);
+    const {isDarkMode} = useContext(ThemeContext);
     const styles = isDarkMode ? darkModeStyles : lightModeStyles;
 
     return {
@@ -23,8 +21,8 @@ export const NavOptions = () => {
                 name={'arrow-left'}
                 size={20}
                 color={styles.headerIcon.color}
-                onPress={() => navigation.goBack() }
-                style={{ paddingLeft: 15 }}
+                onPress={() => navigation.goBack()}
+                style={{paddingLeft: 15}}
             />
         )
     };
@@ -34,6 +32,7 @@ export const NavOptions = () => {
 export const darkModeStyles = StyleSheet.create({
     container: {
         backgroundColor: '#313435',
+        flex: 1,
     },
     headerContainer: {
         backgroundColor: '#000',
@@ -52,7 +51,7 @@ export const darkModeStyles = StyleSheet.create({
         backgroundColor: '#204855',
         padding: 20,
         borderRadius: 10,
-        borderColor:'#000'
+        borderColor: '#000'
     },
     text: {
         color: '#fff',
@@ -65,8 +64,8 @@ export const darkModeStyles = StyleSheet.create({
     },
     textInput: {
         color: '#313435',
-        borderColor:'#000',
-        backgroundColor:'#fff'
+        borderColor: '#000',
+        backgroundColor: '#fff'
     },
     headerTintColor: {
         color: 'white',
@@ -88,17 +87,85 @@ export const darkModeStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 10,
-        padding:10,
+        padding: 10,
     },
     preferenceLabel: {
         fontSize: 16,
         fontWeight: 'bold',
     },
+    container1: {
+        flex: 1,
+        backgroundColor: '#313435',
+        justifyContent: 'flex-start',
+        padding: 10,
+    },
+    title: {
+        fontSize: 22,
+        padding: 10,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    hymnBodyContainer: {
+        padding: 10,
+        alignItems: 'center',
+    },
+    stanzaNumber: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    stanzaText: {
+        fontWeight: '300',
+        color: '#fff',
+        fontSize: 20,
+    },
+
+    refrainNumber: {
+        padding: 5,
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    refrainText: {
+        fontStyle: 'italic',
+        fontWeight: '300',
+        color: '#fff',
+        fontSize: 18,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    button: {
+        padding: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+    },
+    menuItem: {
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    scrollContent: {
+        flexGrow: 1,
+        alignItems: 'center',
+        paddingBottom: 30,
+    },
+    sheetContainer: {
+        flexGrow: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 30,
+    }
 });
 
 export const lightModeStyles = StyleSheet.create({
+
     container: {
         backgroundColor: '#fff',
+        flex: 1,
     },
     headerContainer: {
         backgroundColor: '#3E8188',
@@ -126,7 +193,7 @@ export const lightModeStyles = StyleSheet.create({
     },
     textInput: {
         color: '#000',
-        borderColor:'#000',
+        borderColor: '#000',
     },
     headerText: {
         color: '#fff',
@@ -151,11 +218,148 @@ export const lightModeStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 10,
-        padding:10,
+        padding: 10,
     },
     preferenceLabel: {
         fontSize: 16,
         fontWeight: 'bold',
     },
+    container1: {
+        flex: 1,
+        backgroundColor: '#fff',
+        justifyContent: 'flex-start',
+        padding: 10,
+    },
+
+    hymnBodyContainer: {
+        padding: 10,
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 22,
+        padding: 10,
+        color: '#000',
+        fontWeight: 'bold',
+    },
+
+    stanzaNumber: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#000',
+    },
+    stanzaText: {
+        fontWeight: '300',
+        color: '#000',
+        fontSize: 20,
+    },
+
+    refrainNumber: {
+        padding: 5,
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#000',
+    },
+    refrainText: {
+        fontStyle: 'italic',
+        fontWeight: '300',
+        color: '#000',
+        fontSize: 18,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    button: {
+        padding: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+    },
+    menuItem: {
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    scrollContent: {
+        flexGrow: 1,
+        alignItems: 'center',
+        paddingBottom: 30,
+    },
+    sheetContainer: {
+        flexGrow: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 30,
+    }
 });
 
+const newStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'space-between',
+    },
+    hymnNumber: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    title: {
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    stanzaContainer: {
+        marginBottom: 30,
+        alignItems: 'center',
+    },
+    stanzaNumber: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    stanzaText: {
+        marginTop: 5,
+        textAlign: 'center',
+        fontSize: 14,
+    },
+    refrainContainer: {
+        marginLeft: 20,
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    refrainNumber: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    refrainText: {
+        marginTop: 5,
+        textAlign: 'center',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    button: {
+        padding: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+    },
+    menuItem: {
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    scrollContent: {
+        flexGrow: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 30,
+    },
+    sheetContainer: {
+        flexGrow: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 30,
+    }
+});
