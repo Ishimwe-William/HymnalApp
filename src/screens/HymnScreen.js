@@ -1,10 +1,10 @@
-import React, {useState, useLayoutEffect, useContext, useEffect, useCallback} from 'react';
-import {Text, View, FlatList, TouchableOpacity, TextInput} from 'react-native';
-import {DrawerActions, useNavigation} from '@react-navigation/native';
+import React, { useState, useLayoutEffect, useContext, useEffect, useCallback } from 'react';
+import { Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {ThemeContext} from "../utils/ThemeContext";
-import {darkModeStyles, lightModeStyles} from "../utils/options";
-import {getHymns, initDatabase, preloadHymns} from "../database/database";
+import { ThemeContext } from "../utils/ThemeContext";
+import { darkModeStyles, lightModeStyles } from "../utils/options";
+import { getHymns, initDatabase, preloadHymns } from "../database/database";
 
 initDatabase();
 
@@ -14,7 +14,7 @@ export const HymnScreen = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [filteredHymns, setFilteredHymns] = useState([]);
-    const {isDarkMode} = useContext(ThemeContext);
+    const { isDarkMode } = useContext(ThemeContext);
     const styles = isDarkMode ? darkModeStyles : lightModeStyles;
 
     const loadHymns = useCallback(async () => {
@@ -31,11 +31,9 @@ export const HymnScreen = () => {
         loadHymns();
     }, [loadHymns]);
 
-
     const handleSearch = () => {
         const query = searchQuery.toLowerCase();
         const filtered = hymns.filter((hymn) => {
-
             if (hymn?.title?.toLowerCase().includes(query)) {
                 return true;
             }
@@ -60,7 +58,6 @@ export const HymnScreen = () => {
         setFilteredHymns(filtered);
     };
 
-
     const toggleSearch = () => {
         if (isSearchActive) {
             setSearchQuery('');
@@ -70,7 +67,6 @@ export const HymnScreen = () => {
     };
 
     useLayoutEffect(() => {
-
         const loadHymns = async () => {
             try {
                 const hymnData = await getHymns();
@@ -81,14 +77,14 @@ export const HymnScreen = () => {
             }
         };
 
-        loadHymns
+        loadHymns();
 
         navigation.setOptions({
             headerStyle: {
                 ...styles.headerContainer,
             },
             headerTitle: () => (
-                <Text style={[styles.headerText, {fontSize: 20}]}>
+                <Text style={[styles.headerText, { fontSize: 20 }]}>
                     {isSearchActive ? 'Ishakiro' : 'Indirimbo'}
                 </Text>
             ),
@@ -96,14 +92,14 @@ export const HymnScreen = () => {
                 <TouchableOpacity
                     onPress={isSearchActive ? toggleSearch : () => navigation.dispatch(DrawerActions.toggleDrawer())}>
                     <Icon name={isSearchActive ? 'arrow-left' : 'bars'} size={20} color={styles.headerIcon.color}
-                          style={{paddingLeft: 15}}/>
+                          style={{ paddingLeft: 15 }}/>
                 </TouchableOpacity>
             ),
             headerRight: () => (
                 <View>
                     {!isSearchActive && (
                         <TouchableOpacity onPress={toggleSearch}>
-                            <Icon name={'search'} size={20} color={styles.headerIcon.color} style={{paddingRight: 20}}/>
+                            <Icon name={'search'} size={20} color={styles.headerIcon.color} style={{ paddingRight: 20 }}/>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -133,11 +129,11 @@ export const HymnScreen = () => {
             )}
             <FlatList
                 data={filteredHymns}
-                renderItem={({item}) => (
+                renderItem={({ item, index }) => (
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('HymnDetailScreen', {hymn: item})}
-                        style={[styles.list, {padding: 20, borderBottomWidth: 1}]}>
-                        <Text style={[styles.text, {fontSize: 18}]}>
+                        onPress={() => navigation.navigate('HymnDetailScreen', { hymn: item, hymns: filteredHymns, currentIndex: index })}
+                        style={[styles.list, { padding: 20, borderBottomWidth: 1 }]}>
+                        <Text style={[styles.text, { fontSize: 18 }]}>
                             {item?.number?.toString()}. {item?.title}
                         </Text>
                     </TouchableOpacity>
@@ -147,4 +143,3 @@ export const HymnScreen = () => {
         </View>
     );
 };
-

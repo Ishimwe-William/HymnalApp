@@ -1,12 +1,12 @@
-import React, {useContext, useState, useLayoutEffect} from 'react';
-import {Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback, ScrollView} from 'react-native';
+import React, {useContext, useState, useLayoutEffect, useRef} from 'react';
+import {Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback, ScrollView, PanResponder} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {darkModeStyles, lightModeStyles} from "../utils/options";
 import {ThemeContext} from "../utils/ThemeContext";
 
 export const HymnDetailScreen = ({route}) => {
-    const {hymn} = route.params;
+    const { hymn, hymns, currentIndex } = route.params;
     const navigation = useNavigation();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -14,6 +14,30 @@ export const HymnDetailScreen = ({route}) => {
     const [displayMusicSheet, setDisplayMusicSheet] = useState(false);
     const {isDarkMode} = useContext(ThemeContext);
     const styles = isDarkMode ? darkModeStyles : lightModeStyles;
+    const panResponder = useRef(
+        PanResponder.create({
+            onMoveShouldSetPanResponder: (evt, gestureState) => !!gestureState.dx && Math.abs(gestureState.dx) > 20,
+            onPanResponderRelease: (evt, gestureState) => {
+                if (gestureState.dx < 100) {
+                    handleNextHymn();
+                } else if (gestureState.dx > -100) {
+                    handlePreviousHymn();
+                }
+            },
+        })
+    ).current;
+
+    function handleNextHymn() {
+        if (currentIndex < hymns.length - 1) {
+            navigation.replace('HymnDetailScreen', { hymn: hymns[currentIndex + 1], hymns, currentIndex: currentIndex + 1 });
+        }
+    }
+
+    function handlePreviousHymn() {
+        if (currentIndex > 0) {
+            navigation.replace('HymnDetailScreen', { hymn: hymns[currentIndex - 1], hymns, currentIndex: currentIndex - 1 });
+        }
+    }
 
     function handleMenu() {
         setIsMenuVisible(true);
@@ -50,7 +74,7 @@ export const HymnDetailScreen = ({route}) => {
 
 
     return (
-        <View style={styles.container1}>
+        <View style={styles.container1} {...panResponder.panHandlers}>
             {!displayMusicSheet ? (
                 <ScrollView contentContainerStyle={styles.scrollContent}>
                     <Text selectable style={styles.title}>{hymn.title}</Text>
