@@ -158,6 +158,11 @@ export const darkModeStyles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingBottom: 30,
+    },
+    image: {
+        width: '100%',
+        height: '91%',
+        resizeMode: 'cover',
     }
 });
 
@@ -291,5 +296,10 @@ export const lightModeStyles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingBottom: 30,
+    },
+    image: {
+        width: '100%',
+        height: '91%',
+        resizeMode: 'cover',
     }
 });

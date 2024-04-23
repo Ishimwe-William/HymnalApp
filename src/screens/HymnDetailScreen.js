@@ -1,12 +1,23 @@
-import React, {useContext, useState, useLayoutEffect, useRef} from 'react';
-import {Text, View, TouchableOpacity, Modal, TouchableWithoutFeedback, ScrollView, PanResponder} from 'react-native';
+import React, {useContext, useState, useLayoutEffect, useRef, useEffect} from 'react';
+import {
+    Text,
+    View,
+    TouchableOpacity,
+    Modal,
+    TouchableWithoutFeedback,
+    ScrollView,
+    PanResponder,
+    Image
+} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {darkModeStyles, lightModeStyles} from "../utils/options";
 import {ThemeContext} from "../utils/ThemeContext";
+import * as FileSystem from "expo-file-system";
 
 export const HymnDetailScreen = ({route}) => {
-    const { hymn, hymns, currentIndex } = route.params;
+    const {hymn, hymns, currentIndex} = route.params;
+    const [imageUri, setImageUri] = useState(null);
     const navigation = useNavigation();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -14,30 +25,47 @@ export const HymnDetailScreen = ({route}) => {
     const [displayMusicSheet, setDisplayMusicSheet] = useState(false);
     const {isDarkMode} = useContext(ThemeContext);
     const styles = isDarkMode ? darkModeStyles : lightModeStyles;
-    const panResponder = useRef(
-        PanResponder.create({
-            onMoveShouldSetPanResponder: (evt, gestureState) => !!gestureState.dx && Math.abs(gestureState.dx) > 20,
-            onPanResponderRelease: (evt, gestureState) => {
-                if (gestureState.dx < 100) {
-                    handleNextHymn();
-                } else if (gestureState.dx > -100) {
-                    handlePreviousHymn();
-                }
-            },
-        })
-    ).current;
+
+    useEffect(() => {
+        retrieveLocalImage()
+    }, [handleNextHymn, handlePreviousHymn])
 
     function handleNextHymn() {
+        setIsPlaying(false)
         if (currentIndex < hymns.length - 1) {
-            navigation.replace('HymnDetailScreen', { hymn: hymns[currentIndex + 1], hymns, currentIndex: currentIndex + 1 });
+            navigation.replace('HymnDetailScreen', {
+                hymn: hymns[currentIndex + 1],
+                hymns,
+                currentIndex: currentIndex + 1
+            });
         }
     }
 
     function handlePreviousHymn() {
+        setIsPlaying(false)
         if (currentIndex > 0) {
-            navigation.replace('HymnDetailScreen', { hymn: hymns[currentIndex - 1], hymns, currentIndex: currentIndex - 1 });
+            navigation.replace('HymnDetailScreen', {
+                hymn: hymns[currentIndex - 1],
+                hymns,
+                currentIndex: currentIndex - 1
+            });
         }
     }
+
+    const retrieveLocalImage = async (hymnId) => {
+        const filename = `${hymn.id}.jpg`;
+        const localUri = FileSystem.documentDirectory + filename;
+
+        try {
+            if (await FileSystem.getInfoAsync(localUri)) {
+                setImageUri(localUri);
+            } else {
+                setImageUri(null);
+            }
+        } catch (error) {
+            console.error("Error retrieving image:", error);
+        }
+    };
 
     function handleMenu() {
         setIsMenuVisible(true);
@@ -74,7 +102,7 @@ export const HymnDetailScreen = ({route}) => {
 
 
     return (
-        <View style={styles.container1} {...panResponder.panHandlers}>
+        <View style={styles.container1}>
             {!displayMusicSheet ? (
                 <ScrollView contentContainerStyle={styles.scrollContent}>
                     <Text selectable style={styles.title}>{hymn.title}</Text>
@@ -100,9 +128,18 @@ export const HymnDetailScreen = ({route}) => {
                     ))}
                 </ScrollView>
             ) : (
-                <View style={styles.sheetContainer}>
-                    <Text>Music Sheet goes here</Text>
-                </View>
+                <>
+                    {imageUri ? (
+                        <View>
+                            <Image source={{uri: imageUri}} style={styles.image}/>
+                        </View>
+                    ) : (
+                        <View>
+                            style={styles.sheetContainer}>
+                            <Text>Music Sheet goes here</Text>
+                        </View>
+                    )}
+                </>
             )}
             <Modal
                 animationType="fade"
@@ -126,6 +163,16 @@ export const HymnDetailScreen = ({route}) => {
                 </TouchableWithoutFeedback>
             </Modal>
             <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handlePreviousHymn}
+                >
+                    <Icon
+                        name='arrow-left'
+                        size={20}
+                        color={styles.text.color}
+                    />
+                </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.button, {backgroundColor: styles.text}]}
                     onPress={() => setIsPlaying(!isPlaying)}
@@ -159,6 +206,16 @@ export const HymnDetailScreen = ({route}) => {
                 >
                     <Icon
                         name={displayMusicSheet ? 'file-text' : 'music'}
+                        size={20}
+                        color={styles.text.color}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleNextHymn}
+                >
+                    <Icon
+                        name='arrow-right'
                         size={20}
                         color={styles.text.color}
                     />
